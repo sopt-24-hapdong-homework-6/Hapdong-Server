@@ -38,7 +38,13 @@ const responseMessage = {
     SIGNUP_FAIL : '회원가입 실패',
 
     /* ---------------- */
-    READ_WEBTOON_LIST_SUCCESS : '웹툰 리스트 불러오기 성공'
+    READ_WEBTOON_LIST_SUCCESS : '웹툰 리스트 읽어오기 성공',
+    ADD_WEBTOON_FAIL : '에피소드 추가 실패',
+    ADD_WEBTOON_SUCCESS : '에피소드 추가 성공',
+    UPDATE_WEBTOON_FAIL : '에피소드 수정 실패',
+    UPDATE_WEBTOON_SUCCESS : '에피소드 수정 성공',
+    DELETE_WEBTOON_SUCCESS : '에피소드 삭제 성공',
+    DELETE_WEBTOON_FAIL : '에피소드 삭제 실패'
 }
 
 module.exports = responseMessage;
