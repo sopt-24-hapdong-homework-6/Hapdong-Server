@@ -36,6 +36,9 @@ const responseMessage = {
     NO_COMMENTS : '코멘트가 없음',
     READ_COMMENTS_SUCCESS : '코멘트 불러오기 성공',
     SIGNUP_FAIL : '회원가입 실패',
+
+    /* ---------------- */
+    READ_WEBTOON_LIST_SUCCESS : '웹툰 리스트 불러오기 성공'
 }
 
 module.exports = responseMessage;
