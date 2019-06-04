@@ -75,4 +75,18 @@ router.delete('/:episodeId', async (req,res)=>{
     }
 })
 
+//댓글 리스트
+router.get('/:episodeId/comments', async (req, res)=>{
+    let episodeIdx = req.params.episodeId;
+    let getContentQuery = 'SELECT * FROM comment WHERE episodeIdx = ?';
+    let result = (await pool.queryParam_Arr(getContentQuery, [episodeIdx]));
+    console.log(result);
+    if(!result) {
+        res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.NO_COMMENTS));
+    }
+    else {
+        res.status(200).send(authUtil.successTrue(statusCode.OK, resMsg.READ_COMMENTS_SUCCESS, result));
+    }
+})
+
 module.exports = router;

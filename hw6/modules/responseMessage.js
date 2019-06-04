@@ -24,7 +24,18 @@ const responseMessage = {
     ADD_EPISODE_SUCCESS : '에피소드 추가 성공',
     UPDATE_EPISODE_FAIL : '에피소드 수정 실패',
     UPDATE_EPISODE_SUCCESS : '에피소드 수정 성공',
-    DELETE_EPISODE_SUCCESS : '에피소드 삭제 성공'
+    DELETE_EPISODE_SUCCESS : '에피소드 삭제 성공',
+
+    ADD_COMMENT_FAIL : '코멘트 추가 실패',
+    ADD_COMMENT_SUCCESS : '코멘트 추가 성공',
+    UPDATE_COMMENT_FAIL : '코멘트 수정 실패',
+    UPDATE_COMMENT_SUCCESS : '코멘트 수정 성공',
+    DELETE_COMMENT_FAIL : '코멘트 삭제 실패',
+    DELETE_COMMENT_SUCCESS : '코멘트 삭제 성공',
+    NO_UPDATE_AUTHORITY : '수정 권한이 없는 유저',
+    NO_COMMENTS : '코멘트가 없음',
+    READ_COMMENTS_SUCCESS : '코멘트 불러오기 성공',
+    SIGNUP_FAIL : '회원가입 실패',
 }
 
 module.exports = responseMessage;
