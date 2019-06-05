@@ -24,22 +24,24 @@ router.get('/list/:webtoonId', async (req, res) => {
 router.get('/:episodeId', async (req, res) => {
     let episodeId = req.params.episodeId;
     let getContentQuery = 'SELECT contentImg FROM episode WHERE episodeIdx = ?';
-    let result = (await pool.queryParam_Arr(getContentQuery, [episodeId]))[0];
-    console.log(result);
-    if (!result) {
-        res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.NO_EPISODE));
+    let addViewQuery = 'UPDATE episode SET views= views+1 WHERE episodeIdx = ?';
+    const getContentResult = (await pool.queryParam_Arr(getContentQuery, [episodeId]))[0].contentImg;
+    console.log(getContentResult);
+    const addViewResult = await pool.queryParam_Arr(addViewQuery, [episodeId]);
+    if(!getContentResult || !addViewResult) {
+        res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.READ_EPISODE_FAIL));
     }
     else {
-        res.status(200).send(authUtil.successTrue(statusCode.OK, resMsg.READ_EPISODE_SUCCESS, result));
+        res.status(200).send(authUtil.successTrue(statusCode.OK, resMsg.READ_EPISODE_SUCCESS, getContentResult));
     }
 })
-
+/* views 증가하기 구현*/
 
 router.post('/', upload.fields([{ name: 'thumbnail', maxCount: 1 }, { name: 'contentImg', maxCount: 1 }]), async (req, res) => {
     let insertQuery = 'INSERT INTO episode (thumbnail, title, views, writetime, webtoonIdx, contentImg) VALUES (?,?,?,?,?,?)';
-    let getWebToonIdxQuery = 'SELECT webtoonIdx FROM webtoon WHERE webtoon.name = ?';
-    let getWebToonIdxResult = (await pool.queryParam_Arr(getWebToonIdxQuery, [req.body.webtoonName]))[0].webtoonIdx;
-    let result = await pool.queryParam_Arr(insertQuery, [req.files.thumbnail[0].location, req.body.title, 0, timeFormat, getWebToonIdxResult, req.files.contentImg[0].location]);
+    // let getWebToonIdxQuery = 'SELECT webtoonIdx FROM webtoon WHERE webtoon.name = ?';
+    // let getWebToonIdxResult = (await pool.queryParam_Arr(getWebToonIdxQuery, [req.body.webtoonName]))[0].webtoonIdx;
+    let result = await pool.queryParam_Arr(insertQuery, [req.files.thumbnail[0].location, req.body.title, 0, timeFormat, req.body.webtoonId, req.files.contentImg[0].location]);
     console.log(result);
     if (!result) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.ADD_EPISODE_FAIL));

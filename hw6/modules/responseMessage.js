@@ -25,6 +25,7 @@ const responseMessage = {
     UPDATE_EPISODE_FAIL : '에피소드 수정 실패',
     UPDATE_EPISODE_SUCCESS : '에피소드 수정 성공',
     DELETE_EPISODE_SUCCESS : '에피소드 삭제 성공',
+    READ_EPISODE_FAIL : '에피소드 불러오기 실패',
 
     ADD_COMMENT_FAIL : '코멘트 추가 실패',
     ADD_COMMENT_SUCCESS : '코멘트 추가 성공',
