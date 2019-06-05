@@ -39,12 +39,15 @@ const responseMessage = {
 
     /* ---------------- */
     READ_WEBTOON_LIST_SUCCESS : '웹툰 리스트 읽어오기 성공',
-    ADD_WEBTOON_FAIL : '에피소드 추가 실패',
-    ADD_WEBTOON_SUCCESS : '에피소드 추가 성공',
-    UPDATE_WEBTOON_FAIL : '에피소드 수정 실패',
-    UPDATE_WEBTOON_SUCCESS : '에피소드 수정 성공',
-    DELETE_WEBTOON_SUCCESS : '에피소드 삭제 성공',
-    DELETE_WEBTOON_FAIL : '에피소드 삭제 실패'
+    ADD_WEBTOON_FAIL : '웹툰 추가 실패',
+    ADD_WEBTOON_SUCCESS : '웹툰 추가 성공',
+    UPDATE_WEBTOON_FAIL : '웹툰 수정 실패',
+    UPDATE_WEBTOON_SUCCESS : '웹툰 수정 성공',
+    DELETE_WEBTOON_SUCCESS : '웹툰 삭제 성공',
+    DELETE_WEBTOON_FAIL : '웹툰 삭제 실패',
+    NO_CATEGORY : '해당하는 카테고리가 없음.',
+    READ_WEBTOON_LIST_FAIL : '웹툰 리스트 읽어오기 실패'
+
 }
 
 module.exports = responseMessage;

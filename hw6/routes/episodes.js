@@ -7,8 +7,6 @@ const authUtil = require('../modules/authUtil');
 const upload = require('../config/multer');
 const moment = require('moment');
 const timeFormat = moment().format('YYYY-MM-DD HH:mm:ss');
-const querystring = require('querystring');
-const url = require('url');
 
 router.get('/list/:webtoonId', async (req, res) => {
     let webtoonId = req.params.webtoonId;
@@ -23,12 +21,12 @@ router.get('/list/:webtoonId', async (req, res) => {
     }
 })
 
-router.get('/:episodeId', async (req, res)=>{
+router.get('/:episodeId', async (req, res) => {
     let episodeId = req.params.episodeId;
     let getContentQuery = 'SELECT contentImg FROM episode WHERE episodeIdx = ?';
     let result = (await pool.queryParam_Arr(getContentQuery, [episodeId]))[0];
     console.log(result);
-    if(!result) {
+    if (!result) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.NO_EPISODE));
     }
     else {
@@ -39,7 +37,9 @@ router.get('/:episodeId', async (req, res)=>{
 
 router.post('/', upload.fields([{ name: 'thumbnail', maxCount: 1 }, { name: 'contentImg', maxCount: 1 }]), async (req, res) => {
     let insertQuery = 'INSERT INTO episode (thumbnail, title, views, writetime, webtoonIdx, contentImg) VALUES (?,?,?,?,?,?)';
-    let result = await pool.queryParam_Arr(insertQuery, [req.files.thumbnail[0].location, req.body.title, 0, timeFormat, req.body.webtoonIdx, req.files.contentImg[0].location]);
+    let getWebToonIdxQuery = 'SELECT webtoonIdx FROM webtoon WHERE webtoon.name = ?';
+    let getWebToonIdxResult = (await pool.queryParam_Arr(getWebToonIdxQuery, [req.body.webtoonName]))[0].webtoonIdx;
+    let result = await pool.queryParam_Arr(insertQuery, [req.files.thumbnail[0].location, req.body.title, 0, timeFormat, getWebToonIdxResult, req.files.contentImg[0].location]);
     console.log(result);
     if (!result) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.ADD_EPISODE_FAIL));
@@ -51,10 +51,10 @@ router.post('/', upload.fields([{ name: 'thumbnail', maxCount: 1 }, { name: 'con
 /*webtoon이 되어야 작동할 듯*/
 
 router.put('/', upload.fields([{ name: 'thumbnail', maxCount: 1 }, { name: 'contentImg', maxCount: 1 }]), async (req, res) => {
-    let updateQuery = 'UPDATE episodes SET (thumbnail, contentImg, writetime, title) = (?,?,?,?) WHERE webtoonIdx = ?';
-    let result = await pool.queryParam_Arr(updateQuery, [1,2,3,4,req.body.webtoonId]);
+    let updateQuery = 'UPDATE episode SET thumbnail=?, contentImg=?, writetime=?, title=? WHERE episodeIdx = ?';
+    let result = await pool.queryParam_Arr(updateQuery, [req.files.thumbnail[0].location,req.files.contentImg[0].location, timeFormat, req.body.title, req.body.episodeIdx]);
     console.log(result);
-    if(!result) {
+    if (result.affectedRows ==0 ) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.UPDATE_EPISODE_FAIL));
     }
     else {
@@ -62,12 +62,12 @@ router.put('/', upload.fields([{ name: 'thumbnail', maxCount: 1 }, { name: 'cont
     }
 })
 
-router.delete('/:episodeId', async (req,res)=>{
+router.delete('/:episodeId', async (req, res) => {
     let episodeId = req.params.episodeId;
-    let deleteQuery = 'DELETE FROM episodes WHERE episodeIdx = ?';
+    let deleteQuery = 'DELETE FROM episode WHERE episodeIdx = ?';
     let result = await pool.queryParam_Arr(deleteQuery, [episodeId]);
     console.log(result);
-    if(!result) {
+    if (result.affectedRows == 0) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.NO_EPISODE));
     }
     else {
@@ -76,12 +76,12 @@ router.delete('/:episodeId', async (req,res)=>{
 })
 
 //댓글 리스트
-router.get('/:episodeId/comments', async (req, res)=>{
+router.get('/:episodeId/comments', async (req, res) => {
     let episodeIdx = req.params.episodeId;
     let getContentQuery = 'SELECT * FROM comment WHERE episodeIdx = ?';
     let result = (await pool.queryParam_Arr(getContentQuery, [episodeIdx]));
     console.log(result);
-    if(!result) {
+    if (!result) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.NO_COMMENTS));
     }
     else {
