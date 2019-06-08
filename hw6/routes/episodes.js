@@ -41,7 +41,7 @@ router.post('/', upload.fields([{ name: 'thumbnail', maxCount: 1 }, { name: 'con
     let insertQuery = 'INSERT INTO episode (thumbnail, title, views, writetime, webtoonIdx, contentImg) VALUES (?,?,?,?,?,?)';
     // let getWebToonIdxQuery = 'SELECT webtoonIdx FROM webtoon WHERE webtoon.name = ?';
     // let getWebToonIdxResult = (await pool.queryParam_Arr(getWebToonIdxQuery, [req.body.webtoonName]))[0].webtoonIdx;
-    let result = await pool.queryParam_Arr(insertQuery, [req.files.thumbnail[0].location, req.body.title, 0, timeFormat, req.body.webtoonId, req.files.contentImg[0].location]);
+    let result = await pool.queryParam_Arr(insertQuery, [req.files.thumbnail[0].location, req.body.title, 0, timeFormat, req.body.webtoonIdx, req.files.contentImg[0].location]);
     console.log(result);
     if (!result) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.ADD_EPISODE_FAIL));
