@@ -10,7 +10,7 @@ const timeFormat = moment().format('YYYY-MM-DD HH:mm:ss');
 
 router.post('/', async (req, res)=>{
     let likeQuery = 'INSERT INTO `like` (`webtoonIdx`, `userIdx`) VALUES (?,?)'
-    let result = await pool.queryParam_Arr(likeQuery, [req.body.webtoonId, req.body.userId]);
+    let result = await pool.queryParam_Arr(likeQuery, [req.body.webtoonIdx, req.body.userIdx]);
     console.log(result);
     if(!result) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.LIKE_FAIL));
