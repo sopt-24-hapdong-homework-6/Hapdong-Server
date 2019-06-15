@@ -27,8 +27,10 @@ router.get('/:commentIdx', async (req, res)=>{
 //댓글 쓰기
 router.post('/', upload.single('contentImg'), async (req, res) => {
     const contentImg = req.file.location;
-    const insertQuery = 'INSERT INTO comment (userIdx, writetime, content, contentImg, episodeIdx) VALUES (?, ?, ?, ?, ?)';
+    console.log(contentImg);
+    const insertQuery = 'INSERT INTO `comment` (`userIdx`, `writetime`, `content`, `contentImg`, `episodeIdx`) VALUES (?, ?, ?, ?, ?)';
     let result = await pool.queryParam_Arr(insertQuery, [req.body.userIdx, timeFormat, req.body.content, contentImg, req.body.episodeIdx]);
+    console.log(result);
     if (!result) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.ADD_COMMENT_FAIL));
     }
@@ -68,6 +70,7 @@ router.delete('/', async (req, res) => {
     const selectQuery = 'SELECT * FROM comment WHERE commentIdx = ? AND userIdx = ?'
 
     let commentResult = await pool.queryParam_Arr(selectQuery, [req.body.commentIdx, req.body.userIdx]);
+    console.log(commentResult);
     if (!commentResult) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.UPDATE_COMMENT_FAIL));
     }

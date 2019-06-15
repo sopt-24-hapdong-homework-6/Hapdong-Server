@@ -11,27 +11,19 @@ const resMsg = require('../modules/responseMessage');
 // 웹툰 추가
 router.post('/', upload.fields([{ name: 'thumbnail', maxCount: 1 }]), async (req, res) => {
     let insertQuery = 'INSERT INTO webtoon (name, writer, thumbnail, category) VALUES (?,?,?,?)';
-    let getUserIdxQuery = 'SELECT userIdx FROM user WHERE user.id = ?';
-    let getUserIdxResult = (await pool.queryParam_Arr(getUserIdxQuery, [req.body.writer]))[0].userIdx;
-    let result = await pool.queryParam_Arr(insertQuery, [req.body.name, getUserIdxResult, req.files.thumbnail[0].location, req.body.category]);
+    let result = await pool.queryParam_Arr(insertQuery, [req.body.name, req.body.writer, req.files.thumbnail[0].location, req.body.category]);
     if (!result) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.ADD_WEBTOON_FAIL));
     }
     else {
         res.status(200).send(authUtil.successTrue(statusCode.OK, resMsg.ADD_WEBTOON_SUCCESS));
     }
-
-    /*webtoon 추가에서 writer 는 FK 이기 때문에 req.body.writer 를 넣어주면 안되고 userIdx 가져오는 쿼리문을 짜고 그 결과값을 넣어야 에러가 안남! */
 })
 
 // 웹툰 수정
 router.put('/', upload.fields([{ name: 'thumbnail', maxCount: 1 }]), async (req, res) => {
     let updateQuery = 'UPDATE webtoon SET name = ?, writer = ?, thumbnail = ?, category = ? WHERE webtoonIdx = ?';
-    let getUserIdxQuery = 'SELECT userIdx FROM user WHERE user.id = ?';
-    let getUserIdxResult = (await pool.queryParam_Arr(getUserIdxQuery, [req.body.writer]))[0].userIdx;
-    let result = await pool.queryParam_Arr(updateQuery, [req.body.name, getUserIdxResult, req.files.thumbnail[0].location, req.body.category, req.body.webtoonIdx]);
-    console.log(result.changedRows);
-    console.log(req.body.webtoonIdx);
+    let result = await pool.queryParam_Arr(updateQuery, [req.body.name, req.body.writer, req.files.thumbnail[0].location, req.body.category, req.body.webtoonIdx]);
     if(result.changedRows == 0) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.UPDATE_WEBTOON_FAIL));
     }
@@ -42,8 +34,8 @@ router.put('/', upload.fields([{ name: 'thumbnail', maxCount: 1 }]), async (req,
 })
 
 // 웹툰 삭제
-router.delete('/:webtoonId', async (req,res)=>{
-    let webtoonId = req.params.webtoonId;
+router.delete('/:webtoonIdx', async (req,res)=>{
+    let webtoonIdx = req.params.webtoonIdx;
     let deleteQuery = 'DELETE FROM webtoon WHERE webtoonIdx = ?';
     let result = await pool.queryParam_Arr(deleteQuery, [webtoonId]);
     console.log(result);
