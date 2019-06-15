@@ -10,7 +10,8 @@ const timeFormat = moment().format('YYYY-MM-DD HH:mm:ss');
 
 router.post('/', async (req, res)=>{
     let likeQuery = 'INSERT INTO `like` (`webtoonIdx`, `userIdx`) VALUES (?,?)'
-    let result = await pool.queryParam_Arr(likeQuery, [req.body.webtoonId, req.body.userId]);
+    let result = await pool.queryParam_Arr(likeQuery, [req.body.webtoonIdx, req.body.userIdx]);
+    console.log(req.body);
     console.log(result);
     if(!result) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.LIKE_FAIL));
@@ -21,15 +22,16 @@ router.post('/', async (req, res)=>{
 })
 
 router.get('/:webtoonIdx', async (req, res)=>{
-    let webtoonId = req.params.webtoonIdx;
-    let getLikeQuery = 'SELECT userIdx FROM `like` WHERE `webtoonIdx` = ?';
-    let result = await pool.queryParam_Arr(getLikeQuery, [webtoonId]);
+    let webtoonIdx = req.params.webtoonIdx;
+    let getLikeQuery = 'SELECT `userIdx` FROM `like` WHERE `webtoonIdx` = ?';
+    let result = await pool.queryParam_Arr(getLikeQuery, [webtoonIdx]);
+    console.log(result);
     if(!result) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.GET_LIKE_FAIL));
     }
     else {
         res.status(200).send(authUtil.successTrue(statusCode.OK, resMsg.GET_LIKE_SUCCESS, {
-            webtoonId : webtoonId,
+            webtoonIdx : webtoonIdx,
             likes : result.length
         }))
     }

@@ -10,6 +10,20 @@ const upload = require('../config/multer');
 const moment = require('moment');
 const timeFormat = moment().format('YYYY-MM-DD HH:mm:ss');
 
+
+//댓글 읽기
+router.get('/:commentIdx', async (req, res)=>{
+    const commentIdx = req.params.commentIdx
+    let getCommentQuery = 'SELECT userIdx, content, contentImg FROM comment WHERE commentIdx = ?';
+    let result = await pool.queryParam_Arr(getCommentQuery, [commentIdx])[0];
+    console.log(result);
+    if(!result) {
+        res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.NO_COMMENTS));
+    }
+    else {
+        res.status(200).send(authUtil.successTrue(statusCode.OK, resMsg.READ_COMMENTS_SUCCESS, result));
+    }
+});
 //댓글 쓰기
 router.post('/', upload.single('contentImg'), async (req, res) => {
     const contentImg = req.file.location;

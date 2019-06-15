@@ -21,18 +21,30 @@ router.get('/list/:webtoonId', async (req, res) => {
     }
 })
 
+router.get('/:episodeId/comments', async (req, res)=> {
+    let episodeId = req.params.episodeId;
+    let getCommentListQuery = 'SELECT commentIdx, userIdx, content, contentImg FROM comment WHERE episodeIdx = ?';
+    let result = await pool.queryParam_Arr(getCommentListQuery, [episodeId]);
+    console.log(result);
+    if(!result) {
+        res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.NO_EPISODE));
+    }
+    else {
+        res.status(200).send(authUtil.successTrue(statusCode.OK, resMsg.GET_COMMENTS_LIST_SUCCESS, result));
+    }
+})
+
 router.get('/:episodeId', async (req, res) => {
     let episodeId = req.params.episodeId;
     let getContentQuery = 'SELECT contentImg FROM episode WHERE episodeIdx = ?';
     let addViewQuery = 'UPDATE episode SET views= views+1 WHERE episodeIdx = ?';
-    const getContentResult = (await pool.queryParam_Arr(getContentQuery, [episodeId]))[0].contentImg;
-    console.log(getContentResult);
+    const getContentResult = (await pool.queryParam_Arr(getContentQuery, [episodeId]))[0];
     const addViewResult = await pool.queryParam_Arr(addViewQuery, [episodeId]);
     if(!getContentResult || !addViewResult) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.READ_EPISODE_FAIL));
     }
     else {
-        res.status(200).send(authUtil.successTrue(statusCode.OK, resMsg.READ_EPISODE_SUCCESS, getContentResult));
+        res.status(200).send(authUtil.successTrue(statusCode.OK, resMsg.READ_EPISODE_SUCCESS, getContentResult.contentImg));
     }
 })
 /* views 증가하기 구현*/
