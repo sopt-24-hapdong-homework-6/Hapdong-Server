@@ -49,8 +49,10 @@ const responseMessage = {
     DELETE_WEBTOON_FAIL : '웹툰 삭제 실패',
     NO_CATEGORY : '해당하는 카테고리가 없음.',
     READ_WEBTOON_LIST_FAIL : '웹툰 리스트 읽어오기 실패',
-    LIKE_SUCCESS : '좋아요 성공',
-    LIKE_FAIL : '좋아요 실패',
+    ADD_LIKE_SUCCESS : '좋아요 추가 성공',
+    ADD_LIKE_FAIL : '좋아요 추가 실패',
+    CANCEL_LIKE_SUCCESS : '좋아요 취소 성공',
+    CANCEL_LIKE_FAIL : '좋아요 취소 실패',
     GET_LIKE_SUCCESS : '좋아요 가져오기 성공',
     GET_LIKE_FAIL : '좋아요 가져오기 실패'
 
