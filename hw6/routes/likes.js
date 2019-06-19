@@ -34,15 +34,16 @@ router.post('/', async (req, res)=>{
 })
 
 router.get('/:webtoonIdx', async (req, res)=>{
-    let webtoonId = req.params.webtoonIdx;
-    let getLikeQuery = 'SELECT userIdx FROM `like` WHERE `webtoonIdx` = ?';
-    let result = await pool.queryParam_Arr(getLikeQuery, [webtoonId]);
+    let webtoonIdx = req.params.webtoonIdx;
+    let getLikeQuery = 'SELECT `userIdx` FROM `like` WHERE `webtoonIdx` = ?';
+    let result = await pool.queryParam_Arr(getLikeQuery, [webtoonIdx]);
+    console.log(result);
     if(!result) {
         res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.GET_LIKE_FAIL));
     }
     else {
         res.status(200).send(authUtil.successTrue(statusCode.OK, resMsg.GET_LIKE_SUCCESS, {
-            webtoonId : webtoonId,
+            webtoonIdx : webtoonIdx,
             likes : result.length
         }))
     }

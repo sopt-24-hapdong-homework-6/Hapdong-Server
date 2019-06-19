@@ -34,8 +34,8 @@ router.put('/', upload.fields([{ name: 'thumbnail', maxCount: 1 }]), async (req,
 })
 
 // 웹툰 삭제
-router.delete('/:webtoonId', async (req,res)=>{
-    let webtoonId = req.params.webtoonId;
+router.delete('/:webtoonIdx', async (req,res)=>{
+    let webtoonIdx = req.params.webtoonIdx;
     let deleteQuery = 'DELETE FROM webtoon WHERE webtoonIdx = ?';
     let result = await pool.queryParam_Arr(deleteQuery, [webtoonId]);
     console.log(result);
