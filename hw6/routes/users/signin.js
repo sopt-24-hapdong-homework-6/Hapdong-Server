@@ -49,28 +49,4 @@ router.post('/', async (req, res) => {
     }
 });
 
-//토큰 재발급
-router.get('/refresh', async (req, res) => {
-    const refreshToken = req.headers.refreshtoken;
-    const verify = jwtUtils.verify(req.headers.token);
-    console.log(verify);
-    if(verify == -3 || verify == -2) {
-
-    }
-    else {
-        //DB에서 해당 refreshToken을 가진 User를 찾음
-        const getRefreshTokenUserQuery = 'SELECT * FROM user WHERE refreshToken =?'
-        //찾은 유저
-        const selectUser = await pool.queryParam_Parse(getRefreshTokenUserQuery, [refreshToken]);
-    
-        if(!selectUser || selectUser.length == 0){
-            res.status(200).send(authUtil.successFalse(statusCode.DB_ERROR, resMessage.INVALID_REFRESH_TOKEN));
-        }
-        else{
-            const newAccessToken = jwt.refresh(selectUser[0]);
-            res.status(statusCode.OK).send(utils.successTrue(statusCode.OK, resMessage.REFRESH_TOKEN, newAccessToken));
-        }
-    }
-});
-
 module.exports = router;
