@@ -58,7 +58,8 @@ const responseMessage = {
 
     UNVALID_TOKEN : '유효하지 않은 토큰',
     INVALID_REFRESH_TOKEN : '유효하지 않은 Refresh Token',
-    REFRESH_TOKEN : '새 토큰 발급 성공'
+    REFRESH_TOKEN : '새 토큰 발급 성공',
+    ALREADY_LOGIN : '이미 로그인 되어 있습니다.'
 }
 
 module.exports = responseMessage;
