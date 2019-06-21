@@ -7,6 +7,7 @@ const authUtil = require('../../modules/authUtil');
 const pool = require('../../modules/pool');
 const jwtUtils = require('../../modules/jwt');
 const crypto = require('crypto-promise');
+const loginVerify = require('../../modules/loginVerify')
 
 //로그인
 router.post('/', async (req, res) => {
@@ -37,4 +38,9 @@ router.post('/', async (req, res) => {
 
     }
 });
+
+router.get('/', loginVerify.isLoggedin, (req, res)=>{
+    console.log(req.decoded);
+} )
+
 module.exports = router;

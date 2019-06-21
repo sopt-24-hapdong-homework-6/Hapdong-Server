@@ -6,24 +6,26 @@ const statusCode = require('../modules/statusCode');
 const authUtil = require('../modules/authUtil');
 const upload = require('../config/multer');
 const moment = require('moment');
+const loginVerify = require('../modules/loginVerify');
 const timeFormat = moment().format('YYYY-MM-DD HH:mm:ss');
 
-router.post('/', async (req, res)=>{
-    let checkLikeQuery = 'SELECT userIdx FROM `like` WHERE `webtoonIdx` = ?, `userIdx` = ?';
+router.post('/', loginVerify.isLoggedin, async (req, res)=>{
+    const userIdx = req.decoded.idx[0].userIdx;
+    let checkLikeQuery = 'SELECT userIdx FROM `like` WHERE `webtoonIdx` = ? AND `userIdx` = ?';
     let addLikeQuery = 'INSERT INTO `like` (`webtoonIdx`, `userIdx`) VALUES (?,?)'
-    let cancelLikeQuery = 'DELETE FROM `like` WHERE `webtoonIdx` = ?, `userIdx` = ?';
-    let checkResult = await pool.queryParam_Arr(checkLikeQuery, [req.body.webtoonIdx, req.body.userIdx]);
+    let cancelLikeQuery = 'DELETE FROM `like` WHERE `webtoonIdx` = ? AND `userIdx` = ?';
+    let checkResult = await pool.queryParam_Arr(checkLikeQuery, [req.body.webtoonIdx, userIdx]);
     console.log(checkResult);
     
     if(checkResult.length==0) {
-        let result = await pool.queryParam_Arr(addLikeQuery, [req.body.webtoonIdx, req.body.userIdx]);
+        let result = await pool.queryParam_Arr(addLikeQuery, [req.body.webtoonIdx, userIdx]);
         if(!result){
             res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.ADD_LIKE_FAIL));
         } else {
             res.status(200).send(authUtil.successTrue(statusCode.OK, resMsg.ADD_LIKE_SUCCESS));
         }
     } else if (checkResult.length>0) {
-        let result = await pool.queryParam_Arr(cancelLikeQuery, [req.body.webtoonIdx, req.body.userIdx]);
+        let result = await pool.queryParam_Arr(cancelLikeQuery, [req.body.webtoonIdx, userIdx]);
         if(!result){
             res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.CANCEL_LIKE_FAIL));
         } else {
