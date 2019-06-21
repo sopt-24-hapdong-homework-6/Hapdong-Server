@@ -12,17 +12,17 @@ router.post('/', async (req, res)=>{
     let checkLikeQuery = 'SELECT userIdx FROM `like` WHERE `webtoonIdx` = ?, `userIdx` = ?';
     let addLikeQuery = 'INSERT INTO `like` (`webtoonIdx`, `userIdx`) VALUES (?,?)'
     let cancelLikeQuery = 'DELETE FROM `like` WHERE `webtoonIdx` = ?, `userIdx` = ?';
-    let chekResult = await pool.queryParam_Arr(checkLikeQuery, [req.body.webtoonIdx, req.body.userIdx]);
-    console.log(chekResult);
+    let checkResult = await pool.queryParam_Arr(checkLikeQuery, [req.body.webtoonIdx, req.body.userIdx]);
+    console.log(checkResult);
     
-    if(chekResult.length==0) {
+    if(checkResult.length==0) {
         let result = await pool.queryParam_Arr(addLikeQuery, [req.body.webtoonIdx, req.body.userIdx]);
         if(!result){
             res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.ADD_LIKE_FAIL));
         } else {
             res.status(200).send(authUtil.successTrue(statusCode.OK, resMsg.ADD_LIKE_SUCCESS));
         }
-    } else if (chekResult.length>0) {
+    } else if (checkResult.length>0) {
         let result = await pool.queryParam_Arr(cancelLikeQuery, [req.body.webtoonIdx, req.body.userIdx]);
         if(!result){
             res.status(200).send(authUtil.successFalse(statusCode.BAD_REQUEST, resMsg.CANCEL_LIKE_FAIL));

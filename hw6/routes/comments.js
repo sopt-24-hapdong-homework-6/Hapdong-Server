@@ -5,7 +5,7 @@ const resMsg = require('../modules/responseMessage')
 const statusCode = require('../modules/statusCode');
 const authUtil = require('../modules/authUtil');
 const pool = require('../modules/pool');
-
+const loginVerify = require('../modules/loginVerify');
 const upload = require('../config/multer');
 const moment = require('moment');
 const timeFormat = moment().format('YYYY-MM-DD HH:mm:ss');
