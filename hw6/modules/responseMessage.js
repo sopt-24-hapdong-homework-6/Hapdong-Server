@@ -56,7 +56,9 @@ const responseMessage = {
     GET_LIKE_SUCCESS : '좋아요 가져오기 성공',
     GET_LIKE_FAIL : '좋아요 가져오기 실패',
 
-    UNVALID_TOKEN : '유효하지 않은 토큰'
+    UNVALID_TOKEN : '유효하지 않은 토큰',
+    INVALID_REFRESH_TOKEN : '유효하지 않은 Refresh Token',
+    REFRESH_TOKEN : '새 토큰 발급 성공'
 }
 
 module.exports = responseMessage;

@@ -26,16 +26,34 @@ router.post('/', async (req, res) => {
         if (loadPwd === hashedPw.toString('base64')) {
             if(result[0].refreshToken == null) {
                 await pool.queryParam_Arr(makeRefreshTokenQuery, [tokens.refreshToken, req.body.id]);
-                res.status(200).send(authUtil.successTrue(statusCode.OK, resMessage.SIGNIN_SUCCESS, tokens.token));
+                res.status(200).send(authUtil.successTrue(statusCode.OK, resMessage.SIGNIN_SUCCESS, tokens));
             }
             else {
-                res.status(200).send(authUtil.successTrue(statusCode.OK, resMessage.SIGNIN_SUCCESS, tokens.token ));
+                res.status(200).send(authUtil.successTrue(statusCode.OK, resMessage.SIGNIN_SUCCESS, tokens));
             }
         }
         else {
             res.status(200).send(authUtil.successFalse(statusCode.DB_ERROR, resMessage.ID_OR_PASSWORD_INCORRECT));
         }
 
+    }
+});
+
+//토큰 재발급
+router.get('/refresh', (req, res) => {
+    const refreshToken = req.headers.refreshtoken;
+
+    //DB에서 해당 refreshToken을 가진 User를 찾음
+    const getRefreshTokenUserQuery = 'SELECT * FROM user WHERE refreshToken =?'
+    //찾은 유저
+    const selectUser = await pool.queryParam_Parse(getRefreshTokenUserQuery, [refreshToken]);
+    
+    if(!selectUser || selectUser.length == 0){
+        res.status(200).send(authUtil.successFalse(statusCode.DB_ERROR, resMessage.INVALID_REFRESH_TOKEN));
+    }
+    else{
+    const newAccessToken = jwt.refresh(selectUser[0]);
+    res.status(statusCode.OK).send(utils.successTrue(statusCode.OK, resMessage.REFRESH_TOKEN, newAccessToken));
     }
 });
 
